@@ -21,7 +21,8 @@ struct TaskItemView: View {
                     .foregroundColor(.red)
                     .onTapGesture(count: 1) {
                         self.delete()
-                    }
+                }
+                .accessibility(identifier: "deleteButton")
                 
                 NavigationLink(destination: TaskEditView(task: task).environmentObject(self.userData)) {
                     Text(task.title)
