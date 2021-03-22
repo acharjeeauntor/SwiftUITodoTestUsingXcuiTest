@@ -2,42 +2,67 @@
 //  SwiftUITodoUITests.swift
 //  SwiftUITodoUITests
 //
-//  Created by Jessica Silva on 22/03/21.
+//  Created by Fabio Soares on 22/03/21.
 //  Copyright © 2021 Suyeol Jeon. All rights reserved.
 //
 
 import XCTest
 
-class SwiftUITodoUITests: XCTestCase {
+class SwiftUITodoUITests: SwiftUITodoBase {
+    
+    func testCreateANewTask() {
 
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-
-        // In UI tests it is usually best to stop immediately when a failure occurs.
-        continueAfterFailure = false
-
-        // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
+        app.tables.textFields["Create a New Task..."].tap()
+        app.tables.textFields["Create a New Task..."].typeText("New task")
+        app.buttons["Return"].tap()
+        XCTAssertTrue(app.tables.buttons["New task"].exists)
+        
+        // Delete task created
+        app.navigationBars["Tasks 👀"].buttons["Edit"].tap()
+        XCTAssertTrue(app.tables.cells.otherElements.containing(.button, identifier:"New task").images["deleteButton"].waitForExistence(timeout: 10))
+        app.tables.cells.otherElements.containing(.button, identifier:"New task").images["deleteButton"].tap()
+        app.navigationBars["Tasks 👀"].buttons["Done"].tap()
     }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+    
+    func testDeleteExistingTask() {
+        
+        // Create a new task
+        app.tables.textFields["Create a New Task..."].tap()
+        app.tables.textFields["Create a New Task..."].typeText("New task")
+        app.buttons["Return"].tap()
+        XCTAssertTrue(app.tables.buttons["New task"].exists)
+        
+        // Delete task created
+        app.navigationBars["Tasks 👀"].buttons["Edit"].tap()
+        XCTAssertTrue(app.tables.cells.otherElements.containing(.button, identifier:"New task").images["deleteButton"].waitForExistence(timeout: 10))
+        app.tables.cells.otherElements.containing(.button, identifier:"New task").images["deleteButton"].tap()
+        app.navigationBars["Tasks 👀"].buttons["Done"].tap()
+                
+        // Assert task was deleted
+        XCTAssertFalse(app.tables.buttons["New task"].exists)
     }
-
-    func testExample() throws {
-        // UI tests must launch the application that they test.
-        let app = XCUIApplication()
-        app.launch()
-
-        // Use recording to get started writing UI tests.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-    }
-
-    func testLaunchPerformance() throws {
-        if #available(macOS 10.15, iOS 13.0, tvOS 13.0, *) {
-            // This measures how long it takes to launch your application.
-            measure(metrics: [XCTOSSignpostMetric.applicationLaunch]) {
-                XCUIApplication().launch()
-            }
-        }
+    
+    func testMarkTaskAsCompleted() {
+        
+        // Create a new task
+        app.tables.textFields["Create a New Task..."].tap()
+        app.tables.textFields["Create a New Task..."].typeText("New task")
+        app.buttons["Return"].tap()
+        XCTAssertTrue(app.tables.buttons["New task"].exists)
+        
+        // Mark task as completed
+        let cell = app.tables.children(matching: .cell).element(boundBy: 1)
+        cell.buttons["New task"].tap()
+        
+        XCTAssertTrue(app.tables.containing(.button, identifier:"New task").images["checkmark"].exists)
+        
+        // Delete task created
+        app.navigationBars["Tasks 👀"].buttons["Edit"].tap()
+        XCTAssertTrue(app.tables.cells.otherElements.containing(.button, identifier:"New task").images["deleteButton"].waitForExistence(timeout: 10))
+        app.tables.cells.otherElements.containing(.button, identifier:"New task").images["deleteButton"].tap()
+        app.navigationBars["Tasks 👀"].buttons["Done"].tap()
+                
+        // Assert task was deleted
+        XCTAssertFalse(app.tables.buttons["New task"].exists)
     }
 }
