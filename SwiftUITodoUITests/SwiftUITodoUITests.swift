@@ -9,60 +9,11 @@
 import XCTest
 
 class SwiftUITodoUITests: SwiftUITodoBase {
-    
-    func testCreateANewTask() {
-
-        app.tables.textFields["Create a New Task..."].tap()
-        app.tables.textFields["Create a New Task..."].typeText("New task")
-        app.buttons["Return"].tap()
-        XCTAssertTrue(app.tables.buttons["New task"].exists)
-        
-        // Delete task created
-        app.navigationBars["Tasks 👀"].buttons["Edit"].tap()
-        XCTAssertTrue(app.tables.cells.otherElements.containing(.button, identifier:"New task").images["deleteButton"].waitForExistence(timeout: 10))
-        app.tables.cells.otherElements.containing(.button, identifier:"New task").images["deleteButton"].tap()
-        app.navigationBars["Tasks 👀"].buttons["Done"].tap()
-    }
-    
-    func testDeleteExistingTask() {
-        
-        // Create a new task
-        app.tables.textFields["Create a New Task..."].tap()
-        app.tables.textFields["Create a New Task..."].typeText("New task")
-        app.buttons["Return"].tap()
-        XCTAssertTrue(app.tables.buttons["New task"].exists)
-        
-        // Delete task created
-        app.navigationBars["Tasks 👀"].buttons["Edit"].tap()
-        XCTAssertTrue(app.tables.cells.otherElements.containing(.button, identifier:"New task").images["deleteButton"].waitForExistence(timeout: 10))
-        app.tables.cells.otherElements.containing(.button, identifier:"New task").images["deleteButton"].tap()
-        app.navigationBars["Tasks 👀"].buttons["Done"].tap()
-                
-        // Assert task was deleted
-        XCTAssertFalse(app.tables.buttons["New task"].exists)
-    }
-    
-    func testMarkTaskAsCompleted() {
-        
-        // Create a new task
-        app.tables.textFields["Create a New Task..."].tap()
-        app.tables.textFields["Create a New Task..."].typeText("New task")
-        app.buttons["Return"].tap()
-        XCTAssertTrue(app.tables.buttons["New task"].exists)
-        
-        // Mark task as completed
-        let cell = app.tables.children(matching: .cell).element(boundBy: 1)
-        cell.buttons["New task"].tap()
-        
-        XCTAssertTrue(app.tables.containing(.button, identifier:"New task").images["checkmark"].exists)
-        
-        // Delete task created
-        app.navigationBars["Tasks 👀"].buttons["Edit"].tap()
-        XCTAssertTrue(app.tables.cells.otherElements.containing(.button, identifier:"New task").images["deleteButton"].waitForExistence(timeout: 10))
-        app.tables.cells.otherElements.containing(.button, identifier:"New task").images["deleteButton"].tap()
-        app.navigationBars["Tasks 👀"].buttons["Done"].tap()
-                
-        // Assert task was deleted
-        XCTAssertFalse(app.tables.buttons["New task"].exists)
+    func testCreateANewTask(){
+        let inputField =  app.tables/*@START_MENU_TOKEN@*/.textFields["Create a New Task..."]/*[[".cells[\"Create a New Task...\"].textFields[\"Create a New Task...\"]",".textFields[\"Create a New Task...\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
+        inputField.tap()
+        inputField.typeText("Auntor Acharja")
+        app/*@START_MENU_TOKEN@*/.buttons["Return"]/*[[".keyboards",".buttons[\"return\"]",".buttons[\"Return\"]"],[[[-1,2],[-1,1],[-1,0,1]],[[-1,2],[-1,1]]],[0]]@END_MENU_TOKEN@*/.tap()
+        XCTAssert(app.tables.buttons["Auntor Acharja"].exists)
     }
 }
